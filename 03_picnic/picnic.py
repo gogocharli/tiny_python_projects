@@ -41,6 +41,14 @@ def get_args():
         action="store_false",
     )
 
+    parser.add_argument(
+        "-c",
+        "--char",
+        metavar="seperator",
+        help="Character used to seperate the printed list",
+        default=",",
+    )
+
     return parser.parse_args()
 
 
@@ -52,6 +60,7 @@ def main():
     needs_sorting = args.sorted
     item_list = args.items
     include_oxford_comma = args.oxford
+    seperator = args.char + " "
 
     if needs_sorting:
         item_list.sort()
@@ -64,9 +73,9 @@ def main():
         message += f"{item_list[0]} and {item_list[1]}."
     else:
         message += (
-            f"{', '.join(item_list[0:-1])}, and {item_list[-1]}."
+            f"{seperator.join(item_list[0:-1])}{seperator}and {item_list[-1]}."
             if include_oxford_comma
-            else f"{', '.join(item_list[0:-1])} and {item_list[-1]}."
+            else f"{seperator.join(item_list[0:-1])} and {item_list[-1]}."
         )
 
     print(message)

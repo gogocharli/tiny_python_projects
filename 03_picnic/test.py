@@ -77,3 +77,13 @@ def test_no_oxford_comma():
     out = getoutput(f"{prg} {arg} --no-oxford")
     expected = "You are bringing juice, marshmellows and napkins."
     assert out.strip() == expected
+
+
+# ---------------------------------------------------
+def test_support_custom_seperator():
+    """Allow the user to pass a seperator of their choosing"""
+
+    arg = "crabs sushi shawarmas tacos"
+    out = getoutput(f"{prg} {arg} -c ';'")
+    expected = "You are bringing crabs; sushi; shawarmas; and tacos."
+    assert out.strip() == expected
