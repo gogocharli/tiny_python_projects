@@ -6,7 +6,9 @@ Purpose: Create an howling letter
 """
 
 import argparse
+import sys
 from os import path
+import io
 
 
 # --------------------------------------------------
@@ -29,7 +31,15 @@ def get_args():
         default=None,
     )
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if path.isfile(args.input):
+        args.input = open(args.input)
+    else:
+        # Also treat a string as a stream,
+        # the newline emulates a file's ending
+        args.input = io.StringIO(args.input + "\n")
+
+    return args
 
 
 # --------------------------------------------------
@@ -38,24 +48,11 @@ def main():
 
     args = get_args()
     input = args.input
-    out_file = args.outfile
+    out_file = open(args.outfile, "wt") if args.outfile else sys.stdout
 
-    # Check if the input is a file
-    is_file = path.isfile(input)
-
-    out_str = ""
-    if path.isfile(input):
-        in_fh = open(input)
-        out_str = in_fh.read().rstrip().upper()
-    else:
-        out_str = input.upper()
-
-    if out_file != None:
-        out_fh = open(out_file, "wt")
-        out_fh.write(out_str)
-        out_fh.close()
-    else:
-        print(out_str)
+    for line in input:
+        out_file.write(line.upper())
+    out_file.close()
 
 
 # --------------------------------------------------
