@@ -20,15 +20,23 @@ def get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
-    parser.add_argument("input", metavar="input", help="the input string or file")
+    parser.add_argument("input", metavar="input", help="input string or file")
 
     parser.add_argument(
         "-o",
         "--outfile",
-        help="The name of the output file. Will print there instead of the standard output",
+        help="The name of the output file. Replaces standard output",
         metavar="filename",
         type=str,
         default=None,
+    )
+
+    parser.add_argument(
+        "-e",
+        "--ee",
+        help="Converts the text to lowercase instead of uppercase",
+        action="store_true",
+        dest="lower",
     )
 
     args = parser.parse_args()
@@ -43,6 +51,12 @@ def get_args():
 
 
 # --------------------------------------------------
+def change_case(text, lower=False):
+    """Transform text to uppercase or lowercase"""
+    return text.lower() if lower else text.upper()
+
+
+# --------------------------------------------------
 def main():
     """Make a jazz noise here"""
 
@@ -51,7 +65,7 @@ def main():
     out_file = open(args.outfile, "wt") if args.outfile else sys.stdout
 
     for line in input:
-        out_file.write(line.upper())
+        out_file.write(change_case(line, lower=args.lower))
     out_file.close()
 
 
