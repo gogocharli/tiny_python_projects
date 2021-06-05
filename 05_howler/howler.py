@@ -7,7 +7,7 @@ Purpose: Create an howling letter
 
 import argparse
 import sys
-from os import path
+import os
 import io
 
 
@@ -16,17 +16,19 @@ def get_args():
     """Get command-line arguments"""
 
     parser = argparse.ArgumentParser(
-        description="Create an howling letter",
+        description="Create one or more howling letters",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
-    parser.add_argument("input", metavar="input", help="input string or file")
+    parser.add_argument(
+        "input", nargs="+", metavar="input", help="file or string input(s)"
+    )
 
     parser.add_argument(
         "-o",
-        "--outfile",
-        help="The name of the output file. Replaces standard output",
-        metavar="filename",
+        "--outdir",
+        help="The name of the output directory",
+        metavar="directory",
         type=str,
         default=None,
     )
@@ -40,14 +42,17 @@ def get_args():
     )
 
     args = parser.parse_args()
-    if path.isfile(args.input):
-        args.input = open(args.input)
-    else:
-        # Also treat a string as a stream,
-        # the newline emulates a file's ending
-        args.input = io.StringIO(args.input + "\n")
 
+    args.input = [input_to_stream(input) for input in args.input]
     return args
+
+
+# --------------------------------------------------
+def input_to_stream(input):
+    if os.path.isfile(input):
+        return (os.path.basename(input), open(input))
+    else:
+        return (f"{input[0: 3]}.txt", io.StringIO(input + "\n"))
 
 
 # --------------------------------------------------
@@ -62,11 +67,19 @@ def main():
 
     args = get_args()
     input = args.input
-    out_file = open(args.outfile, "wt") if args.outfile else sys.stdout
+    outdir = args.outdir
 
-    for line in input:
-        out_file.write(change_case(line, lower=args.lower))
-    out_file.close()
+    # Create the directory if it doesn't exist
+    if outdir and not os.path.isdir(outdir):
+        os.mkdir(outdir)
+
+    # For each file in the input list write a new file
+    for (filename, file) in input:
+        out_file = open(os.path.join(outdir, filename), "wt") if outdir else sys.stdout
+
+        for line in file:
+            out_file.write(change_case(line, lower=args.lower))
+        out_file.close()
 
 
 # --------------------------------------------------
