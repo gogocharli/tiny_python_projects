@@ -49,6 +49,7 @@ def get_args():
 
 # --------------------------------------------------
 def input_to_stream(input):
+    """Converts text into a stream and opens a file"""
     if os.path.isfile(input):
         return (os.path.basename(input), open(input))
     else:
@@ -83,6 +84,7 @@ def main():
         # Only close if there is an output file
         if outdir:
             out_file.close()
+        file.close()
 
 
 # --------------------------------------------------
