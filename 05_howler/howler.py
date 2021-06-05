@@ -79,7 +79,10 @@ def main():
 
         for line in file:
             out_file.write(change_case(line, lower=args.lower))
-        out_file.close()
+
+        # Only close if there is an output file
+        if outdir:
+            out_file.close()
 
 
 # --------------------------------------------------
