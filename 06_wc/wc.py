@@ -2,10 +2,12 @@
 """
 Author : Charles Yahouedeou <thexrayone@icloud.com>
 Date   : 2021-06-04
-Purpose: Rock the Casbah
+Purpose: Count line, word, and bytes
 """
 
 import argparse
+import sys
+from os import path
 
 
 # --------------------------------------------------
@@ -13,40 +15,37 @@ def get_args():
     """Get command-line arguments"""
 
     parser = argparse.ArgumentParser(
-        description='Rock the Casbah',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        description="Count line, word, and bytes",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
 
-    parser.add_argument('positional',
-                        metavar='str',
-                        help='A positional argument')
+    parser.add_argument(
+        "files",
+        help="Input file(s)",
+        metavar="FILE",
+        nargs="*",
+        default=sys.stdin,
+    )
 
-    parser.add_argument('-a',
-                        '--arg',
-                        help='A named string argument',
-                        metavar='str',
-                        type=str,
-                        default='')
+    args = parser.parse_args()
+    args.files = [open_file(file) for file in args.files]
 
-    parser.add_argument('-i',
-                        '--int',
-                        help='A named integer argument',
-                        metavar='int',
-                        type=int,
-                        default=0)
+    return args
 
-    parser.add_argument('-f',
-                        '--file',
-                        help='A readable file',
-                        metavar='FILE',
-                        type=argparse.FileType('rt'),
-                        default=None)
 
-    parser.add_argument('-o',
-                        '--on',
-                        help='A boolean flag',
-                        action='store_true')
+# -------------------------------------------------
+def open_file(filename):
+    """Opens a file if it exists"""
+    if path.isfile(filename):
+        return (filename, open(filename))
+    else:
+        sys.exit(f"No such file or directory: '{filename}'")
 
-    return parser.parse_args()
+
+# --------------------------------------------------
+def count_words(string):
+    """Return the word count of a string"""
+    return len(string.split())
 
 
 # --------------------------------------------------
@@ -54,19 +53,17 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
-    str_arg = args.arg
-    int_arg = args.int
-    file_arg = args.file
-    flag_arg = args.on
-    pos_arg = args.positional
+    for (filename, file) in args.files:
+        lines = 0
+        words = 0
 
-    print(f'str_arg = "{str_arg}"')
-    print(f'int_arg = "{int_arg}"')
-    print('file_arg = "{}"'.format(file_arg.name if file_arg else ''))
-    print(f'flag_arg = "{flag_arg}"')
-    print(f'positional = "{pos_arg}"')
+        for line in file:
+            words += count_words(line)
+            lines += 1
+        sys.stdout.write(f"{words:>4} {lines:>4} {filename}\n")
+    file.close()
 
 
 # --------------------------------------------------
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
