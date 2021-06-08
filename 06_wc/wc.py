@@ -42,21 +42,36 @@ def count_words(string):
 
 # --------------------------------------------------
 def main():
-    """Make a jazz noise here"""
+    """Word counter"""
 
     args = get_args()
+
+    total = {"num_lines": 0, "num_words": 0, "num_bytes": 0}
+
     for file in args.files:
         num_lines = 0
         num_words = 0
         num_bytes = 0
+
         for line in file:
             num_words += count_words(line)
             num_bytes += len(line)
             num_lines += 1
+
+        total["num_lines"] += num_lines
+        total["num_words"] += num_words
+        total["num_bytes"] += num_bytes
+
         sys.stdout.write(
             "{:8}{:8}{:8} {}\n".format(num_lines, num_words, num_bytes, file.name)
         )
         file.close()
+    if len(args.files) >= 2:
+        sys.stdout.write(
+            "{:8}{:8}{:8} {}\n".format(
+                total["num_lines"], total["num_words"], total["num_bytes"], "total"
+            )
+        )
 
 
 # --------------------------------------------------
