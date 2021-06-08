@@ -6,6 +6,7 @@ Purpose: Count line, word, and bytes
 """
 
 import argparse
+import io
 import sys
 from os import path
 
@@ -23,23 +24,14 @@ def get_args():
         "files",
         help="Input file(s)",
         metavar="FILE",
+        type=argparse.FileType("rt"),
         nargs="*",
-        default=sys.stdin,
+        default=[sys.stdin],
     )
 
     args = parser.parse_args()
-    args.files = [open_file(file) for file in args.files]
 
     return args
-
-
-# -------------------------------------------------
-def open_file(filename):
-    """Opens a file if it exists"""
-    if path.isfile(filename):
-        return (filename, open(filename))
-    else:
-        sys.exit(f"No such file or directory: '{filename}'")
 
 
 # --------------------------------------------------
@@ -53,15 +45,18 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
-    for (filename, file) in args.files:
-        lines = 0
-        words = 0
-
+    for file in args.files:
+        num_lines = 0
+        num_words = 0
+        num_bytes = 0
         for line in file:
-            words += count_words(line)
-            lines += 1
-        sys.stdout.write(f"{words:>4} {lines:>4} {filename}\n")
-    file.close()
+            num_words += count_words(line)
+            num_bytes += len(line)
+            num_lines += 1
+        sys.stdout.write(
+            "{:8}{:8}{:8} {}\n".format(num_lines, num_words, num_bytes, file.name)
+        )
+        file.close()
 
 
 # --------------------------------------------------
