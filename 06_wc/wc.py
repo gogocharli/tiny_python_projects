@@ -35,12 +35,6 @@ def get_args():
 
 
 # --------------------------------------------------
-def count_words(string):
-    """Return the word count of a string"""
-    return len(string.split())
-
-
-# --------------------------------------------------
 def main():
     """Word counter"""
 
@@ -49,12 +43,10 @@ def main():
     total = {"num_lines": 0, "num_words": 0, "num_bytes": 0}
 
     for file in args.files:
-        num_lines = 0
-        num_words = 0
-        num_bytes = 0
+        num_lines, num_words, num_bytes = 0
 
         for line in file:
-            num_words += count_words(line)
+            num_words += len(line.split())
             num_bytes += len(line)
             num_lines += 1
 
@@ -66,7 +58,8 @@ def main():
             "{:8}{:8}{:8} {}\n".format(num_lines, num_words, num_bytes, file.name)
         )
         file.close()
-    if len(args.files) >= 2:
+
+    if len(args.files) > 1:
         sys.stdout.write(
             "{:8}{:8}{:8} {}\n".format(
                 total["num_lines"], total["num_words"], total["num_bytes"], "total"
