@@ -6,9 +6,7 @@ Purpose: Count line, word, and bytes
 """
 
 import argparse
-import io
 import sys
-from os import path
 
 
 # --------------------------------------------------
