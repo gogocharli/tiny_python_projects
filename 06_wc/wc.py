@@ -43,7 +43,7 @@ def main():
     total = {"num_lines": 0, "num_words": 0, "num_bytes": 0}
 
     for file in args.files:
-        num_lines, num_words, num_bytes = 0
+        num_lines, num_words, num_bytes = 0, 0, 0
 
         for line in file:
             num_words += len(line.split())
