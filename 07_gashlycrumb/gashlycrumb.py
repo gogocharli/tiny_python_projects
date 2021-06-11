@@ -18,19 +18,19 @@ def get_args():
     )
 
     parser.add_argument(
-        "letter",
-        metavar="letter(s)",
+        "letters",
+        metavar="letter",
         nargs="+",
-        help="Letters to look for",
+        help="Letter(s)",
     )
 
     parser.add_argument(
         "-f",
         "--file",
-        help="A readable file",
+        help="Input file",
         metavar="FILE",
         type=argparse.FileType("rt"),
-        default="./gashlycrumb.txt",
+        default="gashlycrumb.txt",
     )
 
     return parser.parse_args()
@@ -42,7 +42,7 @@ def main():
 
     args = get_args()
 
-    print(args.letter, args.file.name)
+    print(args.letters, args.file.name)
 
 
 # --------------------------------------------------
