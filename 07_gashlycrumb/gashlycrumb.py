@@ -42,16 +42,10 @@ def main():
 
     args = get_args()
 
-    lookup = dict()
-    for line in args.file:
-        lookup[line[0].upper()] = line.rstrip()
+    lookup = {line[0].upper(): line.rstrip() for line in args.file}
 
     for letter in args.letters:
-        value = lookup.get(letter.upper())
-        if value:
-            print(value)
-        else:
-            print(f'I do not know "{letter}".')
+        print(lookup.get(letter.upper(), f'I do not know "{letter}".'))
 
 
 # --------------------------------------------------
