@@ -42,7 +42,16 @@ def main():
 
     args = get_args()
 
-    print(args.letters, args.file.name)
+    lookup = dict()
+    for line in args.file:
+        lookup[line[0]] = line
+
+    for letter in args.letters:
+        value = lookup.get(letter.upper())
+        if value:
+            print(value, end="")
+        else:
+            print(f'I do not know "{letter}".')
 
 
 # --------------------------------------------------
