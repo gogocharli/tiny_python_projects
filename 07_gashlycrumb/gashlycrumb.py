@@ -44,12 +44,12 @@ def main():
 
     lookup = dict()
     for line in args.file:
-        lookup[line[0]] = line
+        lookup[line[0].upper()] = line.rstrip()
 
     for letter in args.letters:
         value = lookup.get(letter.upper())
         if value:
-            print(value, end="")
+            print(value)
         else:
             print(f'I do not know "{letter}".')
 
